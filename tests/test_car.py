@@ -9,10 +9,17 @@ class TestCar(unittest.TestCase):
 
     def test_initial_position(self):
         """
-        Test the initial position and direction of the car.
+        Test the initial position and direction of the car without an identifier.
         """
         car = Car(1, 2, 'N')
         self.assertEqual(car.get_position(), "1 2 N")
+
+    def test_initial_position_with_identifier(self):
+        """
+        Test the initial position and direction of the car with an identifier.
+        """
+        car = Car(1, 2, 'N', 'A')
+        self.assertEqual(car.get_position_with_id(), "A 1 2 N")
 
     def test_rotate_left(self):
         """
@@ -69,6 +76,16 @@ class TestCar(unittest.TestCase):
         commands = "FFRFFFRRLF"
         car.execute_commands(commands, field)
         self.assertEqual(car.get_position(), "4 3 S")
+
+    def test_execute_commands_with_identifier(self):
+        """
+        Test the car's execution of a sequence of commands with an identifier.
+        """
+        field = Field(10, 10)
+        car = Car(1, 2, 'N', 'A')
+        commands = "FFRFFFRRLF"
+        car.execute_commands(commands, field)
+        self.assertEqual(car.get_position_with_id(), "A 4 3 S")
 
     def test_invalid_commands(self):
         """

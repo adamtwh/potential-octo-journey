@@ -6,9 +6,9 @@ class Car:
     # Directions in clockwise order: North, East, South, West
     directions = ['N', 'E', 'S', 'W']
 
-    def __init__(self, x, y, direction):
+    def __init__(self, x, y, direction, identifier=None):
         """
-        Initializes the car's position and direction.
+        Initializes the car's position, direction, and optionally, an identifier.
         Raises ValueError if coordinates are negative or direction is invalid.
         """
         if not isinstance(x, int) or not isinstance(y, int):
@@ -21,12 +21,21 @@ class Car:
         self.x = x
         self.y = y
         self.direction = direction
+        self.identifier = identifier  # Optional identifier for the car
 
     def get_position(self):
         """
         Returns the current position and direction of the car as a string.
         """
         return f"{self.x} {self.y} {self.direction}"
+
+    def get_position_with_id(self):
+        """
+        Returns the current position, direction, and identifier of the car as a string.
+        """
+        if self.identifier:
+            return f"{self.identifier} {self.x} {self.y} {self.direction}"
+        return self.get_position()
 
     def rotate_left(self):
         """

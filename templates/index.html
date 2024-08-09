@@ -1,100 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Auto Driving Car Simulator</title>
-    <!-- Bootstrap CSS -->
+
+    <!-- Link to external CSS file -->
+    <link href="../static/styles.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Roboto', Arial, sans-serif;
-            background-color: #f8f9fa;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0;
-        }
-        .container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-            width: 100%;
-        }
-        h1 {
-            color: #198754;
-            margin-bottom: 20px;
-        }
-        .output-container {
-            margin-top: 20px;
-        }
-        .output-header {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 8px;
-            color: #333;
-        }
-        .output {
-            font-size: 18px;
-            padding: 10px;
-            border-radius: 4px;
-            background-color: #e9ecef;
-            border: 1px solid #ced4da;
-            min-height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: #495057;
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
-    <div class="container">
-        <h1 class="text-center">Auto Driving Car Simulator</h1>
-        <form id="carForm" method="post" action="/simulate">
-            <div class="mb-3">
-                <label for="input" class="form-label">Enter your input:</label>
-                <textarea id="input" name="input" class="form-control" rows="4" required></textarea>
+    <main class="main-container">
+        <h1>Auto Driving Car Simulator</h1>
+
+        <!-- Part 1: Single Car Simulation -->
+        <section class="section-container part-1">
+            <h2 class="h4">Part 1: Single Car Simulation</h2>
+            <form id="part1Form" method="post" action="/simulate_part1">
+                <div class="mb-3">
+                    <label for="input1" class="form-label">Enter your input:</label>
+                    <textarea id="input1" name="input" class="form-control" rows="4" required></textarea>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <button type="button" class="btn secondary-button" onclick="insertSampleInputPart1()">Insert Sample Input</button>
+                    <button type="submit" class="btn simulate-button">Simulate Part 1</button>
+                </div>
+            </form>
+
+            <div class="output-container mt-3">
+                <div class="output-header">Part 1 Output</div>
+                <div class="output" id="output1"></div>
             </div>
-            <div class="d-flex justify-content-between">
-                <button type="button" class="btn btn-secondary" onclick="insertSampleInput()">Insert Sample Input</button>
-                <button type="submit" class="btn btn-success">Simulate</button>
+        </section>
+
+        <!-- Part 2: Multiple Cars Simulation -->
+        <section class="section-container part-2">
+            <h2 class="h4">Part 2: Multiple Cars Simulation</h2>
+            <form id="part2Form" method="post" action="/simulate_part2">
+                <div class="mb-3">
+                    <label for="input2" class="form-label">Enter your input:</label>
+                    <textarea id="input2" name="input" class="form-control" rows="8" required></textarea>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <button type="button" class="btn secondary-button" onclick="insertSampleInputPart2()">Insert Sample Input</button>
+                    <button type="submit" class="btn simulate-button">Simulate Part 2</button>
+                </div>
+            </form>
+
+            <div class="output-container mt-3">
+                <div class="output-header">Part 2 Output</div>
+                <div class="output" id="output2"></div>
             </div>
-        </form>
-        <div class="output-container">
-            <div class="output-header">Output</div>
-            <div class="output" id="output"></div>
-        </div>
-    </div>
+        </section>
+    </main>
 
     <!-- Bootstrap JS and dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Inline JavaScript for sample input and form submission -->
     <script>
-        function insertSampleInput() {
+        function insertSampleInputPart1() {
             const sampleInput = "10 10\n1 2 N\nFFRFFFRRLF";
-            document.getElementById('input').value = sampleInput;
+            document.getElementById('input1').value = sampleInput;
         }
 
-        document.getElementById('carForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            var form = event.target;
-            var formData = new FormData(form);
+        function insertSampleInputPart2() {
+            const sampleInput = "10 10\n\nA\n1 2 N\nFFRFFFFRRL\n\nB\n7 8 W\nFFLFFFFFFF";
+            document.getElementById('input2').value = sampleInput;
+        }
 
-            fetch('/simulate', {
+        document.getElementById('part1Form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+
+            fetch('/simulate_part1', {
                 method: 'POST',
                 body: formData
-            }).then(response => response.text())
-              .then(text => {
-                  document.getElementById('output').innerText = text;
-              }).catch(error => {
-                  console.error('Error:', error);
-                  document.getElementById('output').innerText = 'An error occurred.';
-              });
+            })
+                .then(response => response.text())
+                .then(text => {
+                    document.getElementById('output1').innerText = text;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('output1').innerText = 'An error occurred.';
+                });
+        });
+
+        document.getElementById('part2Form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+
+            fetch('/simulate_part2', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.text())
+                .then(text => {
+                    document.getElementById('output2').innerText = text;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('output2').innerText = 'An error occurred.';
+                });
         });
     </script>
 </body>
+
 </html>

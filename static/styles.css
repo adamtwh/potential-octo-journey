@@ -1,0 +1,103 @@
+/* styles.css */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    background-color: #F9F7F7; /* Light background color */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.main-container {
+    max-width: 800px;
+    width: 100%;
+}
+
+.section-container {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.section-container.part-1 {
+    background-color: #DBE2EF; /* Light blue background for Part 1 */
+}
+
+.section-container.part-2 {
+    background-color: #3F72AF; /* Darker blue background for Part 2 */
+    color: #F9F7F7; /* Light text color for contrast */
+}
+
+h1 {
+    color: #112D4E; /* Darker blue for main heading */
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.form-label {
+    font-weight: 700;
+    color: #112D4E;
+}
+
+.output-container {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    border-radius: 4px;
+    background-color: #F9F7F7; /* Light background for output box */
+    border: 1px solid #DBE2EF;
+    color: #112D4E; /* Darker blue for text */
+}
+
+.output-header {
+    font-size: 1.125rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #112D4E;
+}
+
+.output {
+    font-size: 1rem;
+    padding: 0.75rem;
+    background-color: #F9F7F7;
+    border-radius: 4px;
+    border: 1px solid #DBE2EF;
+    min-height: 2.5rem;
+    text-align: left;
+    white-space: pre-wrap;
+    color: #112D4E;
+}
+
+button {
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button.simulate-button {
+    background-color: #198754; /* Green button color */
+    color: #fff;
+    border: none;
+}
+
+button.simulate-button:hover {
+    background-color: #157347; /* Darker green on hover */
+}
+
+button.secondary-button {
+    background-color: #6c757d; /* Bootstrap's secondary button color */
+    color: #fff;
+    border: none;
+}
+
+button.secondary-button:hover {
+    background-color: #5a6268; /* Darker grey on hover */
+}

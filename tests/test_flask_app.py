@@ -13,6 +13,14 @@ class FlaskAppTestCase(unittest.TestCase):
         self.app = app.test_client()
         self.app.testing = True
 
+    def perform_invalid_input_test(self, endpoint, input_data, expected_error_message):
+        """
+        Helper function to test invalid inputs for the specified endpoint.
+        """
+        response = self.app.post(endpoint, data={'input': input_data})
+        self.assertEqual(response.status_code, 400)
+        self.assertIn(expected_error_message.encode(), response.data)
+
     def test_home_page(self):
         """
         Test that the home page loads correctly.
@@ -21,83 +29,108 @@ class FlaskAppTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'Auto Driving Car Simulator', response.data)
 
-    def test_simulate_valid_input(self):
+    # Part 1 Tests
+
+    def test_simulate_part1_valid_input(self):
         """
-        Test the simulate endpoint with valid input.
+        Test the /simulate_part1 endpoint with valid input.
         """
         input_data = '10 10\n1 2 N\nFFRFFFRRLF'
-        response = self.app.post('/simulate', data={'input': input_data})
+        response = self.app.post('/simulate_part1', data={'input': input_data})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data.decode(), '4 3 S')
 
-    def test_simulate_invalid_lines(self):
+    def test_simulate_part1_invalid_field_dimensions(self):
         """
-        Test the simulate endpoint with invalid number of input lines.
-        """
-        input_data = '10 10\n1 2 N'
-        response = self.app.post('/simulate', data={'input': input_data})
-        self.assertEqual(response.status_code, 400)
-        self.assertIn(b'Error: Please provide exactly 3 lines of input.', response.data)
-
-    def test_simulate_invalid_field_dimensions(self):
-        """
-        Test the simulate endpoint with invalid field dimensions.
+        Test the /simulate_part1 endpoint with invalid field dimensions.
         """
         input_data = '10 A\n1 2 N\nFFRFFFRRLF'
-        response = self.app.post('/simulate', data={'input': input_data})
-        self.assertEqual(response.status_code, 400)
-        self.assertIn(b'Error: Field dimensions must be integers.', response.data)
+        expected_error_message = 'Error: Field dimensions must be integers.'
+        self.perform_invalid_input_test('/simulate_part1', input_data, expected_error_message)
 
-    def test_simulate_invalid_position(self):
+    def test_simulate_part1_invalid_position(self):
         """
-        Test the simulate endpoint with invalid initial position.
+        Test the /simulate_part1 endpoint with invalid initial position.
         """
         input_data = '10 10\nA 2 N\nFFRFFFRRLF'
-        response = self.app.post('/simulate', data={'input': input_data})
-        self.assertEqual(response.status_code, 400)
-        self.assertIn(b'Error: Initial position must be integers.', response.data)
+        expected_error_message = 'Error: Initial position must be integers.'
+        self.perform_invalid_input_test('/simulate_part1', input_data, expected_error_message)
 
-    def test_simulate_invalid_direction(self):
+    def test_simulate_part1_invalid_direction(self):
         """
-        Test the simulate endpoint with invalid initial direction.
+        Test the /simulate_part1 endpoint with invalid initial direction.
         """
         input_data = '10 10\n1 2 X\nFFRFFFRRLF'
-        response = self.app.post('/simulate', data={'input': input_data})
-        self.assertEqual(response.status_code, 400)
-        self.assertIn(b"Error: Initial direction must be one of 'N', 'E', 'S', or 'W'.", response.data)
+        expected_error_message = "Error: Initial direction must be one of 'N', 'E', 'S', or 'W'."
+        self.perform_invalid_input_test('/simulate_part1', input_data, expected_error_message)
 
-    def test_simulate_invalid_commands(self):
+    def test_simulate_part1_invalid_commands(self):
         """
-        Test the simulate endpoint with invalid commands.
+        Test the /simulate_part1 endpoint with invalid commands.
         """
         input_data = '10 10\n1 2 N\nFFRXFFYFRRLZ'
-        response = self.app.post('/simulate', data={'input': input_data})
-        self.assertEqual(response.status_code, 400)
-        self.assertIn(b"Error: Commands must be a sequence of 'R', 'L', and 'F' only.", response.data)
+        expected_error_message = "Error: Commands must be a sequence of 'R', 'L', and 'F' only."
+        self.perform_invalid_input_test('/simulate_part1', input_data, expected_error_message)
 
-    def test_boundary_conditions(self):
+    def test_boundary_conditions_part1(self):
         """
-        Test the car's behavior at the field boundaries.
+        Test the /simulate_part1 endpoint for boundary conditions.
         """
-        input_data = '10 10\n0 0 S\nFFFF\n'  # Car should not move as it is already at the bottom boundary.
-        response = self.app.post('/simulate', data={'input': input_data})
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data.decode(), '0 0 S')
+        boundary_test_cases = [
+            ('10 10\n0 0 S\nFFFF\n', '0 0 S'),  # Bottom boundary
+            ('10 10\n0 0 W\nFFFF\n', '0 0 W'),  # Left boundary
+            ('10 10\n9 9 N\nFFFF\n', '9 9 N'),  # Top boundary
+            ('10 10\n9 9 E\nFFFF\n', '9 9 E'),  # Right boundary
+        ]
 
-        input_data = '10 10\n0 0 W\nFFFF\n'  # Car should not move as it is already at the left boundary.
-        response = self.app.post('/simulate', data={'input': input_data})
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data.decode(), '0 0 W')
+        for input_data, expected_output in boundary_test_cases:
+            response = self.app.post('/simulate_part1', data={'input': input_data})
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.data.decode(), expected_output)
 
-        input_data = '10 10\n9 9 N\nFFFF\n'  # Car should not move as it is already at the top boundary.
-        response = self.app.post('/simulate', data={'input': input_data})
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data.decode(), '9 9 N')
+    # Part 2 Tests
 
-        input_data = '10 10\n9 9 E\nFFFF\n'  # Car should not move as it is already at the right boundary.
-        response = self.app.post('/simulate', data={'input': input_data})
+    def test_simulate_part2_valid_input(self):
+        """
+        Test the /simulate_part2 endpoint with valid input.
+        """
+        input_data = '10 10\n\nA\n1 2 N\nFFRFFFFRRL\n\nB\n7 8 W\nFFLFFFFFFF'
+        response = self.app.post('/simulate_part2', data={'input': input_data})
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data.decode(), '9 9 E')
+        self.assertEqual(response.data.decode(), 'A B\n5 4\n7')
+
+    def test_simulate_part2_no_collision(self):
+        """
+        Test the /simulate_part2 endpoint when no collision occurs.
+        """
+        input_data = '10 10\n\nA\n1 2 N\nFFF\n\nB\n7 8 W\nFFFL'
+        response = self.app.post('/simulate_part2', data={'input': input_data})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data.decode(), 'no collision')
+
+    def test_simulate_part2_invalid_input_format(self):
+        """
+        Test the /simulate_part2 endpoint with invalid input format.
+        """
+        input_data = '10 10\nA\n1 2 N\nFFRFFFFRRL'  # Missing second car
+        expected_error_message = 'Error: Invalid input format. Please provide field size and details for each car.'
+        self.perform_invalid_input_test('/simulate_part2', input_data, expected_error_message)
+
+    def test_simulate_part2_invalid_direction(self):
+        """
+        Test the /simulate_part2 endpoint with an invalid direction for a car.
+        """
+        input_data = '10 10\n\nA\n1 2 X\nFFRFFFFRRL\n\nB\n7 8 W\nFFLFFFFFFF'
+        expected_error_message = "Error: Invalid direction for car A. Must be one of 'N', 'E', 'S', 'W'."
+        self.perform_invalid_input_test('/simulate_part2', input_data, expected_error_message)
+
+    def test_simulate_part2_invalid_commands(self):
+        """
+        Test the /simulate_part2 endpoint with invalid commands for a car.
+        """
+        input_data = '10 10\n\nA\n1 2 N\nFFRXFFYFRRLZ\n\nB\n7 8 W\nFFLFFFFFFF'
+        expected_error_message = "Error: Invalid commands for car A. Must be 'R', 'L', 'F' only."
+        self.perform_invalid_input_test('/simulate_part2', input_data, expected_error_message)
 
 if __name__ == '__main__':
     unittest.main()

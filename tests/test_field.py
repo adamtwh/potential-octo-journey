@@ -66,11 +66,11 @@ class TestField(unittest.TestCase):
         car = Car(0, 0, 'N')
         
         car.move_forward(field)
-        self.assertEqual(car.get_position(), "0 0 N")  # Cannot move in any direction
+        self.assertEqual(car.get_position(), "0 0 N")
         
         car.rotate_left()
         car.move_forward(field)
-        self.assertEqual(car.get_position(), "0 0 W")  # Cannot move in any direction
+        self.assertEqual(car.get_position(), "0 0 W")
 
     def test_invalid_initialization(self):
         """
@@ -80,6 +80,28 @@ class TestField(unittest.TestCase):
             Field(-1, 10)
         with self.assertRaises(ValueError):
             Field(10, -1)
+
+    def test_field_with_multiple_cars(self):
+        """
+        Test the field's ability to manage multiple cars and detect collisions.
+        """
+
+        field = Field(10, 10)
+        car_a = Car(1, 2, 'N', 'A')
+        car_b = Car(7, 8, 'W', 'B')
+        
+        commands_a = "FFRFFFFRRL"
+        commands_b = "FFLFFFFFFF"
+        
+        result = field.simulate_multiple_cars([
+            (car_a, commands_a),
+            (car_b, commands_b)
+        ])
+        
+        # Expected output
+        expected_output = "A B\n5 4\n7"
+        self.assertEqual(result, expected_output)
+
 
 if __name__ == '__main__':
     unittest.main()
