@@ -1,9 +1,10 @@
 import unittest
-from src.auto_driving_car import Field, Car
+from src.car import Car
+from src.field import Field
 
-class TestAutoDrivingCar(unittest.TestCase):
+class TestCar(unittest.TestCase):
     """
-    Unit tests for the Auto Driving Car functionality.
+    Unit tests for the Car class functionality.
     """
 
     def test_initial_position(self):
@@ -59,25 +60,6 @@ class TestAutoDrivingCar(unittest.TestCase):
         car.move_forward(field)
         self.assertEqual(car.get_position(), "1 2 W")
 
-    def test_boundary_conditions(self):
-        """
-        Test the car's behavior at the field boundaries.
-        Car should not move at boundaries.
-        """
-        field = Field(10, 10)
-        car = Car(0, 0, 'S')
-        car.move_forward(field)
-        self.assertEqual(car.get_position(), "0 0 S")
-        car = Car(0, 0, 'W')
-        car.move_forward(field)
-        self.assertEqual(car.get_position(), "0 0 W")
-        car = Car(9, 9, 'N')
-        car.move_forward(field)
-        self.assertEqual(car.get_position(), "9 9 N")
-        car = Car(9, 9, 'E')
-        car.move_forward(field)
-        self.assertEqual(car.get_position(), "9 9 E")
-
     def test_execute_commands(self):
         """
         Test the car's execution of a sequence of commands.
@@ -101,12 +83,8 @@ class TestAutoDrivingCar(unittest.TestCase):
 
     def test_invalid_initialization(self):
         """
-        Test the car and field initialization with invalid parameters.
+        Test the car initialization with invalid parameters.
         """
-        with self.assertRaises(ValueError):
-            Field(-1, 10)
-        with self.assertRaises(ValueError):
-            Field(10, -1)
         with self.assertRaises(ValueError):
             Car(-1, 2, 'N')
         with self.assertRaises(ValueError):

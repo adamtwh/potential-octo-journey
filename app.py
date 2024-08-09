@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template
-from src.auto_driving_car import Field, Car
+from src.car import Car
+from src.field import Field
 
 app = Flask(__name__)
 
