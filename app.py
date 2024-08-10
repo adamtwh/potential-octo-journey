@@ -69,6 +69,7 @@ def simulate_part2():
 
     # Validate that the input has the correct format:
     # The number of lines must be 3 * number_of_cars + 1 (for the field dimensions line).
+    # There must be at least 2 cars.
     if len(lines) < 7 or (len(lines) - 1) % 3 != 0:
         return "Error: Invalid input format. Please provide field size and details for each car.", 400
 

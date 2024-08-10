@@ -5,6 +5,8 @@ class Car:
 
     # Directions in clockwise order: North, East, South, West
     directions = ['N', 'E', 'S', 'W']
+
+    # Change in coordinates for each direction
     direction_delta = {
         'N': (0, 1),
         'E': (1, 0),
@@ -14,7 +16,7 @@ class Car:
 
     def __init__(self, x, y, direction, identifier=None):
         """
-        Initializes the car's position, direction, and optionally, an identifier.
+        Initializes the car's position, direction, and optionally, an identifier (if used multiple-car simulation).
         Raises ValueError if coordinates are negative or direction is invalid.
         """
         if not isinstance(x, int) or not isinstance(y, int):
@@ -31,13 +33,13 @@ class Car:
 
     def get_position(self):
         """
-        Returns the current position and direction of the car as a string.
+        Returns the current coordinates and direction of the car as a string.
         """
         return f"{self.x} {self.y} {self.direction}"
 
     def get_position_with_id(self):
         """
-        Returns the current position, direction, and identifier of the car as a string.
+        Returns the current coordinates, direction, and identifier of the car as a string.
         """
         if self.identifier:
             return f"{self.identifier} {self.x} {self.y} {self.direction}"
@@ -60,7 +62,7 @@ class Car:
     def move_forward(self, field):
         """
         Moves the car forward by one grid point, if within field boundaries.
-        Delegates boundary checking to the Field class.
+        Boundary checking is delegated to the Field class.
         """
         delta_x, delta_y = self.direction_delta[self.direction]
         potential_x, potential_y = self.x + delta_x, self.y + delta_y
