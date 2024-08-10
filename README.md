@@ -54,23 +54,25 @@ This application is built using Python's Flask framework and includes both backe
 
 ### **1. Installation Instructions**
 
-#### **Step 1: Clone the Repository**
+#### **Step 1: Download the Repository**
 
-First, clone the repository containing the application code:
+To download the repository as a ZIP file:
+   - Navigate to the repository on GitHub: `https://github.com/adamtwh/potential-octo-journey`.
+   - Click on the **Code** button near the top-right corner of the repository page.
+   - Select **Download ZIP** from the dropdown menu.
+   - Once the download is complete, extract the ZIP file to a location of your choice on your computer.
 
-```bash
-git clone https://github.com/adamtwh/potential-octo-journey
-cd potential-octo-journey
-```
+Open your terminal and navigate to the extracted directory:
 
-#### **Step 2: Set Up a Virtual Environment**
+     cd path/to/extracted-folder
 
-It’s recommended to use a virtual environment to manage dependencies:
 
-```bash
-python3 -m venv venv
-source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
-```
+#### **Step 2 (Optional): Set Up a Virtual Environment**
+
+Set up a Python virtual environment:
+
+     python3 -m venv venv
+     source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
 
 #### **Step 3: Install Dependencies**
 
