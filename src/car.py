@@ -5,6 +5,12 @@ class Car:
 
     # Directions in clockwise order: North, East, South, West
     directions = ['N', 'E', 'S', 'W']
+    direction_delta = {
+        'N': (0, 1),
+        'E': (1, 0),
+        'S': (0, -1),
+        'W': (-1, 0)
+    }
 
     def __init__(self, x, y, direction, identifier=None):
         """
@@ -56,16 +62,8 @@ class Car:
         Moves the car forward by one grid point, if within field boundaries.
         Delegates boundary checking to the Field class.
         """
-        potential_x, potential_y = self.x, self.y
-        
-        if self.direction == 'N':
-            potential_y += 1
-        elif self.direction == 'E':
-            potential_x += 1
-        elif self.direction == 'S':
-            potential_y -= 1
-        elif self.direction == 'W':
-            potential_x -= 1
+        delta_x, delta_y = self.direction_delta[self.direction]
+        potential_x, potential_y = self.x + delta_x, self.y + delta_y
         
         if field.is_within_bounds(potential_x, potential_y):
             self.x, self.y = potential_x, potential_y

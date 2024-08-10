@@ -27,43 +27,46 @@ class Field:
         """
         Simulates the movement of multiple cars and checks for collisions.
         
-        :param cars_with_commands: A list of tuples, each containing a Car instance and a string of commands.
-        :return: Formatted string indicating collision or "no collision".
+        cars_with_commands: A list of tuples, each containing a Car instance and a string of commands.
         """
         max_steps = max(len(commands) for _, commands in cars_with_commands)
-        
+
         for step in range(max_steps):
             for car, commands in cars_with_commands:
                 if step < len(commands):
                     command = commands[step]
-                    if command == 'L':
-                        car.rotate_left()
-                    elif command == 'R':
-                        car.rotate_right()
-                    elif command == 'F':
-                        potential_x, potential_y = car.x, car.y
+                    
+                    # Capture the car's current position before moving
+                    previous_position = (car.x, car.y)
+                    
+                    # Remove the car's old position from the occupied_positions
+                    self.occupied_positions.pop(car.identifier, None)
+                    
+                    # Execute the command
+                    car.execute_commands(command, self)
 
-                        if car.direction == 'N':
-                            potential_y += 1
-                        elif car.direction == 'E':
-                            potential_x += 1
-                        elif car.direction == 'S':
-                            potential_y -= 1
-                        elif car.direction == 'W':
-                            potential_x -= 1
+                    # Check if the new position collides with any other car's position
+                    collision, output = self.check_collision(car, step)
+                    if collision:
+                        return output
 
-                        # Check if the move is within bounds
-                        if self.is_within_bounds(potential_x, potential_y):
-                            # Check if the position is already occupied
-                            for other_car_id, position in self.occupied_positions.items():
-                                if position == (potential_x, potential_y):
-                                    # Sort car identifiers alphabetically before returning
-                                    car_ids = sorted([car.identifier, other_car_id])
-                                    return f"{car_ids[0]} {car_ids[1]}\n{potential_x} {potential_y}\n{step + 1}"
-                            
-                            # Update car position
-                            self.occupied_positions.pop(car.identifier, None)
-                            car.x, car.y = potential_x, potential_y
-                            self.occupied_positions[car.identifier] = (car.x, car.y)
+                    # Update the car's new position in the occupied_positions
+                    self.occupied_positions[car.identifier] = (car.x, car.y)
 
         return "no collision"
+
+    def check_collision(self, car, step):
+        """
+        Checks if the car's new position results in a collision.
+        
+        car: The car that was just moved.
+        step: The current step in the simulation.
+        """
+        # Check if the car's new position is already occupied by another car
+        for other_car_id, position in self.occupied_positions.items():
+            if position == (car.x, car.y):
+                if other_car_id != car.identifier:
+                    car_ids = sorted([car.identifier, other_car_id])
+                    return True, f"{car_ids[0]} {car_ids[1]}\n{car.x} {car.y}\n{step + 1}"
+        
+        return False, None
